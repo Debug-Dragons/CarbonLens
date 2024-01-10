@@ -8,11 +8,18 @@ const VehicleDb=require("../models/VehicleDb");
 const EmissionFactor=require("../models/EmissionFactor");
 
 router.get("/dashboard",isLoggedIn,async(req,res)=>{
-    const user=currentUser;
+    const user=req.session.passport.user;
+    console.log(user);
     const results=await BusinessDatabase.findOne({user:user});
-    const id=results._id;
-    const CarbonEmission=results.Result;
-    const Bname=results.name;
+    let id;
+    let CarbonEmission;
+    let Bname;
+    if(results){
+        id=results._id;
+        CarbonEmission=results.Result;
+        Bname=results.name;
+
+    }
     res.render("dashResult/dashboard",{Bname,id,CarbonEmission});
 })
 
@@ -30,7 +37,7 @@ router.get("/Contact",isLoggedIn,(req,res)=>{
 
 
 router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
-    const user=currentUser;
+    const user=req.session.passport.user;
     console.log(user);
     const {Bname,Industry,NoOfEmployees,WFHpercent}=req.body;
     let Result=0;

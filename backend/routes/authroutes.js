@@ -25,11 +25,11 @@ router.post("/register",async(req,res)=>{
         req.flash("error","user Already Registered");
     }else{
         await User.register(user,password);
+        req.flash("success","user registered successsfully");
+        res.redirect("/login");
 
     }
-    req.flash("success","user registered successsfully");
-
-    res.redirect("/login");
+    
 
 
 })

@@ -23,9 +23,13 @@ router.post("/register",async(req,res)=>{
 
     req.flash("success","user registered successsfully");
 
-    res.redirect("/login");
+    res.redirect("/");
 
 
+})
+
+router.get("/",function(req,res) {
+    res.redirect("login");
 })
 router.get("/login",(req,res)=>{
     res.render("auth/login");

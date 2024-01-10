@@ -44,7 +44,7 @@ app.set("views",path.join(__dirname,"views"))
 app.use(express.urlencoded({extended:true}))
 app.use(methodOverride("_method"));
 
-
+app.use(express.static("public"));
 app.use(session(sessionConfig));
 app.use(passport.authenticate('session'));
 app.use(flash());

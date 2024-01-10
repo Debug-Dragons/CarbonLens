@@ -14,7 +14,7 @@ const User = require("./models/User");
 const port = 8080;
 const seedData = require("./seedData");
 const seedData2 = require("./seedData2");
-// const getSessionMiddleware = require("./models/util/session");
+
 
 
 //mongostore
@@ -24,8 +24,7 @@ const store = new mongoDBStore({
     uri: "mongodb+srv://omdharra4104:LhQmsArhiSG0oskC@carbondatabase.wyyz30g.mongodb.net/?retryWrites=true&w=majority",
     collection: "session"
 })
-const dbURL =
-  "mongodb+srv://omdharra4104:LhQmsArhiSG0oskC@carbondatabase.wyyz30g.mongodb.net/?retryWrites=true&w=majority";
+const dbURL ="mongodb+srv://omdharra4104:LhQmsArhiSG0oskC@carbondatabase.wyyz30g.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose
   .connect(dbURL)

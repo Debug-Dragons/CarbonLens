@@ -1,35 +1,27 @@
 <% layout('./layout/boilerplate') %>
-<link rel="stylesheet" href="/styles/bstyles.css">
-<div class="p-3 mx-auto w-50 mt-5">
-  <div class="card">
-    <div class="header">
-      <span class="icon">
-        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path clip-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" fill-rule="evenodd"></path>
-        </svg>
-      </span>
-      <p class="alert">Hi, <%=currentUser.username%></p>
-    </div>
-  
-    <p class="message">
-    <h1>
-      <%=businesses.length%> Business(s) found!
-    </h1>
-    <ol>
-      <% businesses.forEach((b, i)=> {%>
-        <li>
-          <a href="">
-            <%=b.Bname%> : <%=b.Result%> KG
-          </a>
-        </li>
-        <%})%>
-    </ol>
-    </p>
-  
-    <div class="actions">
-      <a class="read" href="/dashboard/<%= id %>">
-        Take a Look
-      </a>
-    </div>
-  </div>
+<link rel="stylesheet" href="/styles/bstyles.css" />
+<div class="content">
+  <h2>Your Businesses:</h2>
+  <table>
+    <tr>
+      <th>S.No.</th>
+      <th>Name</th>
+      <th>No. of Employees</th>
+      <th>Total Carbon Emitted (in KG)</th>
+      <th>Last Updated</th>
+      <th></th>
+    </tr>
+    <% businesses.forEach((b, i)=> {%>
+    <tr>
+      <td><%=i+1%></td>
+      <td><%=b.Bname%></td>
+      <td><%=b.NoOfEmployees%></td>
+      <td><%=b.Result%></td>
+      <td><%=toReadableDate(lastUpdated[i])%></td>
+      <td style="padding-left: 40px">
+        <a class="read" href="/dashboard/<%= b._id %>"> Take a Look </a>
+      </td>
+    </tr>
+    <%})%>
+  </table>
 </div>

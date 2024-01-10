@@ -1,0 +1,15 @@
+<% layout('./layout/boilerplate') %>
+
+<section>
+  <h1>Business: <%=business.Bname%></h1>
+  <h1><%=monthlyResults.length%> Result(s) found!</h1>
+  <ol>
+    <% Object.keys(monthlyResults).forEach((year, i)=> {%> <%
+    Object.keys(monthlyResults[year]).forEach((month, i)=> {%> <%let result =
+    monthlyResults[year][month]%>
+    <li>
+      <a> <%=monthNames[month]%>, <%=year%> = <%=result%> KG </a>
+    </li>
+    <%})%> <%})%>
+  </ol>
+</section>

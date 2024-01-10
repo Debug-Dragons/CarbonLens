@@ -1,15 +1,116 @@
 <% layout('./layout/boilerplate') %>
 
+<style>
+  table {
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  th {
+    background-color: #4caf50;
+    color: white;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <section>
   <h1>Business: <%=business.Bname%></h1>
-  <h1><%=monthlyResults.length%> Result(s) found!</h1>
-  <ol>
+  <table>
+    <tr>
+      <th>Month</th>
+      <th>Carbon Emission (in KG)</th>
+    </tr>
     <% Object.keys(monthlyResults).forEach((year, i)=> {%> <%
     Object.keys(monthlyResults[year]).forEach((month, i)=> {%> <%let result =
     monthlyResults[year][month]%>
-    <li>
-      <a> <%=monthNames[month]%>, <%=year%> = <%=result%> KG </a>
-    </li>
+    <tr>
+      <td><%=monthNames[month]%></td>
+      <td><%=result.toFixed(2)%></td>
+    </tr>
     <%})%> <%})%>
-  </ol>
+  </table>
+
+  <div class="monthlyChart">
+    <canvas id="monthlyChart"></canvas>
+  </div>
+  <!-- <script src="monthly_chart.js"></script> -->
+
+  <script>
+    const monthlyResults = <%- JSON.stringify(monthlyResults) %>;
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "Octomber",
+      "November",
+      "December",]
+    const allLabels = [];
+    const inputData = [];
+    const labelofLegend = "Carbon Emission (in KG)";
+    Object.keys(monthlyResults).forEach((year, _) => Object.keys(monthlyResults[year]).forEach((month, _) => {
+        allLabels.push(monthNames[month]);
+        inputData.push(monthlyResults[year][month]);
+    }))
+
+    //Iske neeche haath mat lagaio agar samay pyara ho to
+
+    const ctx1 = document.getElementById("monthlyChart");
+
+    new Chart(ctx1, {
+      type: "bar",
+      data: {
+        labels: allLabels,
+        datasets: [
+          {
+            label: labelofLegend,
+            data: inputData,
+            backgroundColor: [
+              "rgba(255, 159, 64, 0.8)",
+            ],
+            borderColor: [
+              "rgb(255, 159, 64)",
+            ],
+
+            hoverOffset: 25,
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        onClick: (e) => {
+          const canvasPosition = getRelativePosition(e, chart);
+
+          //   Substitute the appropriate scale IDs
+          const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+          const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+        },
+        scales: {
+          display: true,
+        },
+        plugins: {
+          legend: {
+            position: "top",
+            align: "end",
+          },
+        },
+        animation:true,
+      },
+    });
+  </script>
 </section>

@@ -20,9 +20,10 @@ router.get("/Contact",isLoggedIn,(req,res)=>{
 
 
 router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
+    const user=currentUser;
     const {Bname,Industry,NoOfEmployees,WFHpercent}=req.body;
     let Result=0;
-    await BusinessDatabase.create({Bname,Industry,NoOfEmployees,WFHpercent,Result});
+    await BusinessDatabase.create({user,Bname,Industry,NoOfEmployees,WFHpercent,Result});
     const Bdetails=await BusinessDatabase.findOne({Bname:Bname});
     
     req.flash("Your Business Details are added Successfully");

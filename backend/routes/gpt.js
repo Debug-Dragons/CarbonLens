@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 const express=require("express")
 const router=express.Router();
 const BusinessDatabase=require('../models/BusinessDatabase');
@@ -6,7 +6,7 @@ const {isLoggedIn}=require("../middleware");
 
 const FootPrintDb=require("../models/FootprintDb");
 const VehicleDb=require("../models/VehicleDb");
-
+const API_KEY= process.env.API_KEY;
 const OpenAI = require("openai");
 
 let domain_of_company;
@@ -20,7 +20,7 @@ let result;
 let input2;
 
 const openai = new OpenAI({
-  apiKey:"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"
+  apiKey: API_KEY,
 });
 async function main(input) {
 

@@ -6,7 +6,7 @@ const User=require("../models/User");
 const passport=require("passport");
 
 router.get("/register",(req,res)=>{
-    res.render("auth/signup");
+    res.render("auth/login");
 
 })
 
@@ -23,6 +23,7 @@ router.post("/register",async(req,res)=>{
     
     if(Ifexists){
         req.flash("error","user Already Registered");
+        res.redirect("/register");
     }else{
         await User.register(user,password);
         req.flash("success","user registered successsfully");

@@ -197,25 +197,31 @@
     <div class="right">
       <ul>
         <% if(currentUser){ %>
-        <li>
-          <span>Welcome, <%= currentUser.username %></span>
-          <a href="/logout">LogOut</a>
-        </li>
-        <% }else{ %>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Signup</a></li>
-        <% } %>
-      </ul>
-    </div>
-  </ul>
-
-  <a href="#">
-    <div id="hamburg">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </a>
+            <li>
+              <a  href="#"><%= currentUser.username %></a>
+            </li> 
+            <li>
+              <a  href="/logout">LogOut</a>
+            </li> 
+            
+          <% }else{ %>
+          
+            <li >
+              <a href="/login">Login</a>
+            </li> 
+            <li >
+              <a href="/register">Signup</a>
+            </li> 
+          <% } %>
+    </ul>
+    
+    <a href="#">
+        <div id="hamburg">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </a>
 </nav>
 <aside id="side-drawer">
   <nav>

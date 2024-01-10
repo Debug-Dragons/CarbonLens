@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 
 const carbonSchema=new mongoose.Schema({
+    user:String,
     Bname:String, //Name of Bussiness
     Industry:String,
     NoOfEmployees:Number,

@@ -21,7 +21,7 @@ const seedData2 = require("./seedData2");
 const mongoDBStore = require('connect-mongodb-session')(session);
 const store = new mongoDBStore({
     databaseName:"Session",
-    uri: "mongodb://localhost:27017",
+    uri: "mongodb+srv://omdharra4104:LhQmsArhiSG0oskC@carbondatabase.wyyz30g.mongodb.net/?retryWrites=true&w=majority",
     collection: "session"
 })
 const dbURL =

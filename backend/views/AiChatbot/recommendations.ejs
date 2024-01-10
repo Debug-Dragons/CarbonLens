@@ -64,13 +64,20 @@
   var v2=ele2.innerHTML;
   const ele3=document.getElementById("avg");
   var avg=ele3.innerHTML;
-  const allLabels = ["You","Ideal"];
-  for(let i=1;i<v2;i++){
+  let allLabels;
+  if(v2>1){
+    allLabels = ["You"];
+  }
+  for(let i=1;i<=v2;i++){
+    if(i==v2){
+      allLabels.push("Average");
+    }
     allLabels.push("Other"+i);
   }
   let inputData = [];
   if(v2>1){
     inputData=v1.split(",");
+    inputData.push(avg/10000000);
   }else{
     inputData.push(v1);
     inputData.push(avg/10000000);

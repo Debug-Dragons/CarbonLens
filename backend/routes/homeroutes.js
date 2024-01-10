@@ -112,10 +112,12 @@ router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
     await BusinessDatabase.create({user,Bname,Industry,NoOfEmployees,WFHpercent,Result});
     const Bdetails=await BusinessDatabase.findOne({Bname:Bname});
     req.session.Bid = Bdetails._id;
-    await req.session.save();
-    console.log(req.session.Bid);
-    req.flash("Your Business Details are added Successfully");
-    res.redirect(`/BuildingDb/${Bdetails._id}`);
+    req.session.save(function(){
+        console.log(req.session)
+        console.log(req.session.Bid);
+        req.flash("Your Business Details are added Successfully");
+        res.redirect(`/BuildingDb/${Bdetails._id}`);
+    });
 })
 router.get("/Result/:businessid",isLoggedIn,async(req,res)=>{
     const user=req.session.passport.user;

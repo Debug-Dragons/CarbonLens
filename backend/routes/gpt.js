@@ -20,7 +20,7 @@ let result;
 let input2;
 
 const openai = new OpenAI({
-  apiKey:"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"
+  apiKey:"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"
 });
 async function main(input) {
 
@@ -81,24 +81,8 @@ router.get("/newPage/:businessid",isLoggedIn,async(req, res)=>{
   })
   console.log(Arr);
   const len=Arr.length;
-  // response = JSON.parse(await main(input2));
-  response = {
-    overview:"overview",
-    analysis: "Based on the provided data, the company's carbon footprint is significantly higher than the global average per product. This indicates that there is room for improvement in reducing the environmental impact of the company's operations in the coal industry.",
-    performance: "The company's current performance in terms of carbon emissions is concerning and requires immediate attention in order to align with sustainable practices.",
-    recommendations: [
-      "Invest in renewable energy sources: Transitioning to renewable energy sources such as wind, solar, or hydroelectric power can significantly reduce the company's reliance on coal and consequent carbon emissions.",
-      "Implement energy-efficient practices: Adopting energy-efficient technologies and practices throughout the company's operations, including the use of energy-efficient machinery and effective insulation, can help minimize electricity consumption and reduce carbon emissions.",
-      'Promote employee engagement: Encourage and educate employees on the importance of sustainable practices. Implement initiatives such as carpooling or incentivize the use of public transportation to reduce reliance on petrol and diesel, thereby decreasing carbon emissions.',
-      'Explore carbon capture and storage: Investigate the feasibility of implementing carbon capture and storage technologies to capture and store CO2 emissions from coal combustion, effectively reducing overall carbon footprint.',
-      'Optimize supply chain: Collaborate with suppliers to evaluate their environmental practices and ensure they adhere to sustainable standards. Additionally, prioritize local suppliers to reduce transportation emissions and support the local economy.',
-      'Enhance waste management strategies: Implement robust waste management practices, including recycling and proper disposal of hazardous materials, to minimize the environmental impact.',
-      'Support reforestation efforts: Invest in reforestation initiatives or collaborate with environmental organizations to restore and protect natural habitats. This will help offset carbon emissions and contribute to biodiversity conservation.',
-      'Engage in research and development: Allocate resources to research and develop cleaner and more efficient technologies for coal extraction, combustion, and emission reduction.',
-      "Consider diversification: Explore opportunities to diversify the company's business operations by investing in renewable energy projects or transitioning into emerging low-carbon industries.",
-      'Adopt carbon pricing mechanisms: Implement internal carbon pricing mechanisms to incentivize emissions reduction efforts and drive sustainable decision-making within the company.'
-    ]
-  } 
+  response = JSON.parse(await main(input2));
+  
   res.render('AiChatbot/recommendations', { recommendations: response.recommendations, analysis: response.analysis, performance: response.performance, result, overview:response.overview,Arr,len,average});
 })
 

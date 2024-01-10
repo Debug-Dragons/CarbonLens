@@ -16,6 +16,14 @@ const seedData = require("./seedData");
 const seedData2 = require("./seedData2");
 // const getSessionMiddleware = require("./models/util/session");
 
+
+//mongostore
+const mongoDBStore = require('connect-mongodb-session')(session);
+const store = new mongoDBStore({
+    databaseName:"Session",
+    uri: "mongodb://localhost:27017",
+    collection: "session"
+})
 const dbURL =
   "mongodb+srv://omdharra4104:LhQmsArhiSG0oskC@carbondatabase.wyyz30g.mongodb.net/?retryWrites=true&w=majority";
 
@@ -28,10 +36,8 @@ mongoose
 const sessionConfig = {
   secret: "hackathonProject",
   resave: false,
-  saveUninitialized: true,
-  cookie: {
-    http: true,
-  },
+  saveUninitialized: false,
+  store:store
 };
 
 passport.use(new LocalStrategy(User.authenticate()));

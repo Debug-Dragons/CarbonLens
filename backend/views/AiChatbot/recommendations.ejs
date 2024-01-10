@@ -71,16 +71,17 @@
   for(let i=1;i<=v2;i++){
     if(i==v2){
       allLabels.push("Ideal");
+      continue;
     }
     allLabels.push("Other"+i);
   }
   let inputData = [];
   if(v2>1){
     inputData=v1.split(",");
-    inputData.push(avg/10000000);
+    inputData.push(avg/100000);
   }else{
     inputData.push(v1);
-    inputData.push(avg/10000000);
+    inputData.push(avg/100000);
   }
   console.log(inputData);
   console.log(v1);

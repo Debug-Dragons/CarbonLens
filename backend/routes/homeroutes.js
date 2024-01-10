@@ -23,20 +23,6 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
 
     }
     const businesses = await BusinessDatabase.find({user:user}).lean();
-
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-
-    for (let business of businesses) {
-        let result = await BusinessDatabase.findById(business._id)
-            .populate({
-                path: 'Carbondatabase_R',
-                match: { date: { $gte: date } },
-                model: ResultHistoryDb
-            }).exec();
-
-        console.log(result);
-    }
     // const resultHistory = await ResultHistoryDb.find({
     //     date: { $gte: date }
     // });
@@ -44,6 +30,45 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
     console.log(businesses);
     // console.log(resultHistory);
     res.render("dashResult/dashboard",{Bname,id,CarbonEmission, businesses});
+})
+
+router.get("/dashboard/:businessid",isLoggedIn,async(req,res)=>{
+    const user=req.session.passport.user;
+    const {businessid}=req.params;
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    let business = await BusinessDatabase.findById(businessid)
+    .populate({
+        path: 'Carbondatabase_R',
+        match: { date: { $gte: date } },
+        model: ResultHistoryDb
+    }).exec();
+    let results = business.Carbondatabase_R;
+    console.log(results);
+
+    // Convert the results to something monthly
+    let monthlyResults = {};
+    for (let i = 0; i < results.length; i++) {
+        let date = results[i].date;
+        let month = date.getMonth();
+        let year = date.getFullYear();
+        let result = results[i].result;
+        if (monthlyResults[year]) {
+            if (monthlyResults[year][month]) {
+                monthlyResults[year][month] += result;
+            } else {
+                monthlyResults[year][month] = result;
+            }
+        } else {
+            monthlyResults[year] = {};
+            monthlyResults[year][month] = result;
+        }
+    }
+
+    console.log(monthlyResults)
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    res.render("dashResult/business_dashboard",{business, results, monthlyResults, monthNames});
 })
 
 

@@ -68,6 +68,7 @@ router.post('/answer/:businessid', isLoggedIn, async function (req, res) {
   res.render("loader/loadingScreen", { businessid });
 })
 
+
 router.get("/newPage/:businessid",isLoggedIn,async(req, res)=>{
   const {businessid}=req.params;
   const Business=await BusinessDatabase.findById(businessid);

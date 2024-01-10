@@ -24,29 +24,39 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
     }
 
     const businesses = await BusinessDatabase.find({user:user}).lean();
-    const ResultHistory=await ResultHistoryDb.find({user:user}).exec();
-    console.log(ResultHistory);
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    
-    for (let business of businesses) {
-        let result = await BusinessDatabase.findById(business._id)
-            .populate({
-                path: 'Carbondatabase_R',
-                match: { date: { $gte: date } },
-                model: ResultHistoryDb
-            }).exec();
-
-        console.log(result);
+    let lastUpdated = [];
+    for (let i = 0; i < businesses.length; i++) {
+        let business = businesses[i];
+        let id = business._id;
+        let resultHistory = await BusinessDatabase.findOne({_id:id}).populate({
+            path: 'Carbondatabase_R',
+            model: ResultHistoryDb
+        }).exec();
+        resultHistory = resultHistory.Carbondatabase_R[resultHistory.Carbondatabase_R.length - 1];
+        if (resultHistory) {
+            lastUpdated.push(resultHistory.date);
+        } else {
+            lastUpdated.push(null);
+        }
     }
 
-    // const resultHistory = await ResultHistoryDb.find({
-    //     date: { $gte: date }
-    // });
+    const toReadableDate = (date) => {
+        let month = date.getMonth();
+        let year = date.getFullYear();
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let ampm = "AM";
+        if (hour > 12) {
+            hour -= 12;
+            ampm = "PM";
+        }
+        return `${day}/${month}/${year} ${hour}:${minute} ${ampm}`;
+    }
 
     console.log(businesses);
     // console.log(resultHistory);
-    res.render("dashResult/dashboard",{Bname,id,CarbonEmission, businesses});
+    res.render("dashResult/dashboard",{Bname,id,CarbonEmission, businesses, lastUpdated, toReadableDate});
 })
 
 router.get("/dashboard/:businessid",isLoggedIn,async(req,res)=>{

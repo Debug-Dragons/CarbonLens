@@ -20,7 +20,7 @@ let result;
 let input2;
 
 const openai = new OpenAI({
-  apiKey:"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"
+  apiKey:"apIKkeY"
 });
 async function main(input) {
 

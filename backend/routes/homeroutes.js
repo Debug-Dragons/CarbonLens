@@ -6,6 +6,8 @@ const User=require("../models/User");
 const FootPrintDb=require("../models/FootprintDb");
 const VehicleDb=require("../models/VehicleDb");
 const EmissionFactor=require("../models/EmissionFactor");
+const ResultHistoryDb = require("../models/ResultHistoryDb");
+
 
 router.get("/dashboard",isLoggedIn,async(req,res)=>{
     const user=req.session.passport.user;
@@ -20,7 +22,28 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
         Bname=results.name;
 
     }
-    res.render("dashResult/dashboard",{Bname,id,CarbonEmission});
+    const businesses = await BusinessDatabase.find({user:user}).lean();
+
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+
+    for (let business of businesses) {
+        let result = await BusinessDatabase.findById(business._id)
+            .populate({
+                path: 'Carbondatabase_R',
+                match: { date: { $gte: date } },
+                model: ResultHistoryDb
+            }).exec();
+
+        console.log(result);
+    }
+    // const resultHistory = await ResultHistoryDb.find({
+    //     date: { $gte: date }
+    // });
+
+    console.log(businesses);
+    // console.log(resultHistory);
+    res.render("dashResult/dashboard",{Bname,id,CarbonEmission, businesses});
 })
 
 
@@ -29,6 +52,9 @@ router.get("/home",isLoggedIn,(req,res)=>{
 })
 
 router.get("/FillForm",isLoggedIn,(req,res)=>{
+    if(req.session.Bid){
+        return res.redirect(`/BuildingDb/${req.session.Bid}`);
+    }
     res.render("homePage/buisenessForm");
 })
 router.get("/Contact",isLoggedIn,(req,res)=>{
@@ -43,7 +69,9 @@ router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
     let Result=0;
     await BusinessDatabase.create({user,Bname,Industry,NoOfEmployees,WFHpercent,Result});
     const Bdetails=await BusinessDatabase.findOne({Bname:Bname});
-    
+    req.session.Bid = Bdetails._id;
+    await req.session.save();
+    console.log(req.session.Bid);
     req.flash("Your Business Details are added Successfully");
     res.redirect(`/BuildingDb/${Bdetails._id}`);
 })
@@ -51,6 +79,7 @@ router.get("/Result/:businessid",isLoggedIn,async(req,res)=>{
     const {businessid}=req.params;
     const Business=await BusinessDatabase.findById(businessid);
     let value=parseInt(Business.Result);
+    console.log(value);
     value=parseInt(value/1000);
     const id1 = Business.Carbondatabase_B;
     const id2 = Business.Carbondatabase_V;
@@ -133,16 +162,23 @@ router.post("/calulateCF/:businessid",isLoggedIn,async(req,res)=>{
     const Bus=await BusinessDatabase.findById(businessid);
     const val=Bus.Result;
     let sum=parseInt(val);
+    let currResult = 0;
     for(let i=0;i<8;i++){
         const emissionDb=await EmissionFactor.findOne({entityName:`${Arr[i]}`}).exec();
         console.log(emissionDb);
         const Ef=emissionDb.emissionFactor;
         console.log(values[i]);
-        sum+=(Ef*values[i]);
-        console.log(sum);
+        currResult+=(Ef*values[i]);
+        // console.log(sum);
     }
+    console.log(currResult);
+    const BusinessV=await BusinessDatabase.findById(businessid).populate("Carbondatabase_R");
+    const resultHistoryObj = await ResultHistoryDb.create({date:Date.now(),result:currResult});
+    BusinessV.Carbondatabase_R.push(resultHistoryObj);
+    await BusinessV.save();
+    sum+=currResult;
     await BusinessDatabase.findByIdAndUpdate(businessid,{Result:sum});
-    res.redirect(`/VehicleDb/${businessid}`);  
+    res.redirect(`/VehicleDb/${businessid}`);
 })
 
 router.post("/CalculateFinal/:businessid",isLoggedIn,async(req,res)=>{
@@ -160,6 +196,7 @@ router.post("/CalculateFinal/:businessid",isLoggedIn,async(req,res)=>{
     const Bus=await BusinessDatabase.findById(businessid);
     const val=Bus.Result;
     let sum=parseInt(val);
+    let currResult = 0;
     for(let i=0;i<4;i++){
         const emissionDb=await EmissionFactor.findOne({entityName:`${Arr[i]}`}).exec();
         console.log(emissionDb);
@@ -170,9 +207,15 @@ router.post("/CalculateFinal/:businessid",isLoggedIn,async(req,res)=>{
         if(i==1){
             values[i]*=0.84;
         }
-        sum+=(Ef*values[i]);
-        console.log(sum);
+        currResult+=(Ef*values[i]);
+        // console.log(sum);
     }
+    console.log(currResult);
+    const BusinessV=await BusinessDatabase.findById(businessid).populate("Carbondatabase_R");
+    const resultHistoryObj = await ResultHistoryDb.create({date:Date.now(),result:currResult});
+    BusinessV.Carbondatabase_R.push(resultHistoryObj);
+    await BusinessV.save();
+    sum+=currResult;
     await BusinessDatabase.findByIdAndUpdate(businessid,{Result:sum});
     res.redirect(`/SupplyDb/${businessid}`); 
     

@@ -19,17 +19,19 @@ router.get("/register",(req,res)=>{
 router.post("/register",async(req,res)=>{
     const {username,email,password}=req.body;
     const user=new User({username,email});
-    const newUser=await User.register(user,password);
+    const Ifexists=await User.findOne({username:username});
+    
+    if(Ifexists){
+        req.flash("error","user Already Registered");
+    }else{
+        await User.register(user,password);
+        req.flash("success","user registered successsfully");
+        res.redirect("/login");
 
-    req.flash("success","user registered successsfully");
+    }
+    
 
-    res.redirect("/");
 
-
-})
-
-router.get("/",function(req,res) {
-    res.redirect("login");
 })
 router.get("/login",(req,res)=>{
     res.render("auth/login");
@@ -58,4 +60,3 @@ router.get("/logout",(req,res)=>{
 
 
 module.exports=router
-

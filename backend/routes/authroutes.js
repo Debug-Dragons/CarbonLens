@@ -6,7 +6,7 @@ const User=require("../models/User");
 const passport=require("passport");
 
 router.get("/register",(req,res)=>{
-    res.render("auth/signup");
+    res.render("auth/login");
 
 })
 

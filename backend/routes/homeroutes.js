@@ -7,6 +7,16 @@ const FootPrintDb=require("../models/FootprintDb");
 const VehicleDb=require("../models/VehicleDb");
 const EmissionFactor=require("../models/EmissionFactor");
 
+router.get("/dashboard",isLoggedIn,async(req,res)=>{
+    const user=currentUser;
+    const results=await BusinessDatabase.findOne({user:user});
+    const id=results._id;
+    const CarbonEmission=results.Result;
+    const Bname=results.name;
+    res.render("dashResult/dashboard",{Bname,id,CarbonEmission});
+})
+
+
 router.get("/home",isLoggedIn,(req,res)=>{
     res.render("homePage/index");
 })
@@ -21,6 +31,7 @@ router.get("/Contact",isLoggedIn,(req,res)=>{
 
 router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
     const user=currentUser;
+    console.log(user);
     const {Bname,Industry,NoOfEmployees,WFHpercent}=req.body;
     let Result=0;
     await BusinessDatabase.create({user,Bname,Industry,NoOfEmployees,WFHpercent,Result});

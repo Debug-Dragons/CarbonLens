@@ -1,6 +1,11 @@
 <% layout('./layout/boilerplate') %>
 
 <section>
-    <h1>Hi, <%=currentUser%></h1>
-    
+  <h1>Hi, <%=currentUser%></h1>
+  <h1><%=businesses.length%> Business(s) found!</h1>
+  <ol>
+    <% businesses.forEach((b, i)=> {%>
+    <li><%=b.Bname%> : <%=b.Result%> KG</li>
+    <%})%>
+  </ol>
 </section>

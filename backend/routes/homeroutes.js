@@ -118,7 +118,7 @@ router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
     const user=req.session.passport.user;
     console.log(user);
     const {Bname,Industry,NoOfEmployees,WFHpercent}=req.body;
-    let Result=0;
+    let Result=NoOfEmployees*(100 - WFHpercent)/100*1.2;
     await BusinessDatabase.create({user,Bname,Industry,NoOfEmployees,WFHpercent,Result});
     const Bdetails=await BusinessDatabase.findOne({Bname:Bname});
     req.session.Bid = Bdetails._id;

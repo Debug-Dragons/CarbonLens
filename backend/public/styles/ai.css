@@ -187,3 +187,16 @@ body{
   #AI:hover {
     color: aquamarine;
   }
+
+  #barChart{
+    display: block;
+    width: 60%;
+    margin: auto;
+
+  }
+
+  #sbti{
+    height: 30rem;
+    width: 50rem;
+
+  }

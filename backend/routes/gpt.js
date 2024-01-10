@@ -21,10 +21,14 @@ let input2;
 
 const openai = new OpenAI({
 <<<<<<< HEAD
+<<<<<<< HEAD
   apiKey: API_KEY,
 =======
   apiKey:"apIKkeY"
 >>>>>>> 6937aaed106f83af6d17f4329d5cd3348db6b157
+=======
+  apiKey:"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"
+>>>>>>> fd22d7f03b9af1394d13bc820c870eeb2001766f
 });
 async function main(input) {
 

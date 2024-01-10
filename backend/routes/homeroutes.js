@@ -85,7 +85,7 @@ router.get("/dashboard/:businessid",isLoggedIn,async(req,res)=>{
     console.log(monthlyResults)
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
-    res.render("dashResult/business_dashboard",{business, results, monthlyResults, monthNames});
+    res.render("dashResult/business_dashboard",{business, results, monthlyResults, monthNames,businessid});
 })
 
 

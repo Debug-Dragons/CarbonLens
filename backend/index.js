@@ -14,6 +14,7 @@ const User = require("./models/User");
 const port = 8080;
 const seedData = require("./seedData");
 const seedData2 = require("./seedData2");
+// const getSessionMiddleware = require("./models/util/session");
 
 const dbURL =
   "mongodb+srv://omdharra4104:LhQmsArhiSG0oskC@carbondatabase.wyyz30g.mongodb.net/?retryWrites=true&w=majority";
@@ -48,6 +49,7 @@ app.use(express.static("public"));
 app.use(session(sessionConfig));
 app.use(passport.authenticate("session"));
 app.use(flash());
+
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");

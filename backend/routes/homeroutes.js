@@ -7,6 +7,7 @@ const FootPrintDb=require("../models/FootprintDb");
 const VehicleDb=require("../models/VehicleDb");
 const EmissionFactor=require("../models/EmissionFactor");
 
+
 router.get("/dashboard",isLoggedIn,async(req,res)=>{
     const user=req.session.passport.user;
     console.log(user);
@@ -29,6 +30,9 @@ router.get("/home",isLoggedIn,(req,res)=>{
 })
 
 router.get("/FillForm",isLoggedIn,(req,res)=>{
+    if(req.session.Bid){
+        return res.redirect(`/BuildingDb/${req.session.Bid}`);
+    }
     res.render("homePage/buisenessForm");
 })
 router.get("/Contact",isLoggedIn,(req,res)=>{
@@ -43,7 +47,9 @@ router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
     let Result=0;
     await BusinessDatabase.create({user,Bname,Industry,NoOfEmployees,WFHpercent,Result});
     const Bdetails=await BusinessDatabase.findOne({Bname:Bname});
-    
+    req.session.Bid = Bdetails._id;
+    await req.session.save();
+    console.log(req.session.Bid);
     req.flash("Your Business Details are added Successfully");
     res.redirect(`/BuildingDb/${Bdetails._id}`);
 })

@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
 
 const footprintSchema=new mongoose.Schema({
+    month:String,
     electricity:Number, //B->Building
     naturalGas: Number,
     heatingOil: Number,

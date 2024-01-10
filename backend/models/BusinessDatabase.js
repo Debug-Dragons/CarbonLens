@@ -19,7 +19,13 @@ const carbonSchema=new mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:"VehicleDb"
         }
-    ]
+    ],
+    Carbondatabase_R:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"ResultHistoryDb"
+        }
+    ],
 })
 /////////////////////////--------------
 const BusinessDatabase=mongoose.model('BusinessDatabase',carbonSchema);

@@ -22,11 +22,13 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
         Bname=results.name;
 
     }
-    const businesses = await BusinessDatabase.find({user:user}).lean();
 
+    const businesses = await BusinessDatabase.find({user:user}).lean();
+    const ResultHistory=await ResultHistoryDb.find({user:user}).exec();
+    console.log(ResultHistory);
     const date = new Date();
     date.setDate(date.getDate() - 7);
-
+    
     for (let business of businesses) {
         let result = await BusinessDatabase.findById(business._id)
             .populate({
@@ -37,6 +39,7 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
 
         console.log(result);
     }
+
     // const resultHistory = await ResultHistoryDb.find({
     //     date: { $gte: date }
     // });
@@ -76,6 +79,7 @@ router.post("/BusinessDb",isLoggedIn,async(req,res)=>{
     res.redirect(`/BuildingDb/${Bdetails._id}`);
 })
 router.get("/Result/:businessid",isLoggedIn,async(req,res)=>{
+    const user=req.session.passport.user;
     const {businessid}=req.params;
     const Business=await BusinessDatabase.findById(businessid);
     let value=parseInt(Business.Result);
@@ -116,6 +120,7 @@ router.get("/SupplyDb/:businessid",isLoggedIn,async(req,res)=>{
     res.render("homePage/supplyChain",{businessid});
 })
 router.post("/ProductCF/:businessid", isLoggedIn, async (req, res) => {
+    const user=req.session.passport.user;
     const { businessid } = req.params;
     const Obj=req.body;
     console.log(Obj);
@@ -149,6 +154,7 @@ router.post("/ProductCF/:businessid", isLoggedIn, async (req, res) => {
 })
 
 router.post("/calulateCF/:businessid",isLoggedIn,async(req,res)=>{
+    const user=req.session.passport.user;
     const {businessid}=req.params;
     const {electricity,naturalGas,heatingOil,coal,lpg,propane,diesel,refrigerant,refrigerantAmount}=req.body;
     const Arr=["electricity","naturalGas","heatingOil","coal","lpg","propane","diesel"];
@@ -173,7 +179,7 @@ router.post("/calulateCF/:businessid",isLoggedIn,async(req,res)=>{
     }
     console.log(currResult);
     const BusinessV=await BusinessDatabase.findById(businessid).populate("Carbondatabase_R");
-    const resultHistoryObj = await ResultHistoryDb.create({date:Date.now(),result:currResult});
+    const resultHistoryObj = await ResultHistoryDb.create({date:Date.now(),result:currResult,user});
     BusinessV.Carbondatabase_R.push(resultHistoryObj);
     await BusinessV.save();
     sum+=currResult;
@@ -182,6 +188,7 @@ router.post("/calulateCF/:businessid",isLoggedIn,async(req,res)=>{
 })
 
 router.post("/CalculateFinal/:businessid",isLoggedIn,async(req,res)=>{
+    const user=req.session.passport.user;
     const {businessid}=req.params;
     const{petrol,diesel,cng,lpg}=req.body;
     const Arr=["petrol","diesel","cng","lpg"];
@@ -212,7 +219,7 @@ router.post("/CalculateFinal/:businessid",isLoggedIn,async(req,res)=>{
     }
     console.log(currResult);
     const BusinessV=await BusinessDatabase.findById(businessid).populate("Carbondatabase_R");
-    const resultHistoryObj = await ResultHistoryDb.create({date:Date.now(),result:currResult});
+    const resultHistoryObj = await ResultHistoryDb.create({date:Date.now(),result:currResult,user});
     BusinessV.Carbondatabase_R.push(resultHistoryObj);
     await BusinessV.save();
     sum+=currResult;

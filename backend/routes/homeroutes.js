@@ -78,7 +78,13 @@ router.get("/dashboard/:businessid",isLoggedIn,async(req,res)=>{
     for (let i = 0; i < results.length; i++) {
         let date = results[i].date;
         let month = date.getMonth();
+        if(month==NaN){
+            month="Jan";
+        }
         let year = date.getFullYear();
+        if(year==NaN){
+            year="2024";
+        }
         let result = results[i].result;
         if (monthlyResults[year]) {
             if (monthlyResults[year][month]) {

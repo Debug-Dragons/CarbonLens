@@ -64,10 +64,7 @@
   var v2=ele2.innerHTML;
   const ele3=document.getElementById("avg");
   var avg=ele3.innerHTML;
-  let allLabels;
-  if(v2>1){
-    allLabels = ["You"];
-  }
+  let allLabels = ["You"];
   for(let i=1;i<=v2;i++){
     if(i==v2){
       allLabels.push("Ideal");
@@ -78,10 +75,10 @@
   let inputData = [];
   if(v2>1){
     inputData=v1.split(",");
-    inputData.push(avg/100000);
+    inputData.push(avg/1000000);
   }else{
     inputData.push(v1);
-    inputData.push(avg/100000);
+    inputData.push(avg/1000000);
   }
   console.log(inputData);
   console.log(v1);

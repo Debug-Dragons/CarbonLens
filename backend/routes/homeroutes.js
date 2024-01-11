@@ -35,10 +35,13 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
         resultHistory = resultHistory.Carbondatabase_R[resultHistory.Carbondatabase_R.length - 1];
         if (resultHistory) {
             lastUpdated.push(resultHistory.date);
-        } else {
-            lastUpdated.push(null);
         }
+        // } else {
+        //     lastUpdated.push(null);
+        // }
     }
+    console
+    console.log(lastUpdated);
 
     const toReadableDate = (date) => {
         let month = date.getMonth();

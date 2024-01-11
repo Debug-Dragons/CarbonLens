@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 const express=require("express")
 const router=express.Router();
 const BusinessDatabase=require('../models/BusinessDatabase');
@@ -6,7 +6,7 @@ const {isLoggedIn}=require("../middleware");
 
 const FootPrintDb=require("../models/FootprintDb");
 const VehicleDb=require("../models/VehicleDb");
-
+const API_KEY= process.env.API_KEY;
 const OpenAI = require("openai");
 
 let domain_of_company;
@@ -20,7 +20,7 @@ let result;
 let input2;
 
 const openai = new OpenAI({
-  apiKey:"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"
+  apiKey: API_KEY,
 });
 async function main(input) {
 
@@ -51,19 +51,35 @@ router.post('/answer/:businessid', isLoggedIn, async function (req, res) {
   carbonEmission = parseInt((Business.Result)) / 1000; //in tonnes
   standard = parseInt(Business.Average / 1000); //in tonnes
   //input promt
-  input2 = `Act like an API. I give you a request in json format and you give me output in json format. You have to only answer in json format and nothing else! I am giving you a carbon footprint of a company which operates in field of ${domain_of_company} and you have to generate analysis and based on that you will provide actionable recommendations.
-    Your output json format: {"overview":"...",analysis": "...", "performance" : "...", "recommendations": [..]}
-    talk as if you are a environment specialist giving advice to a major corporation and analyze the performance of the company
-    do not repeat the input values provided to you,give me at least 5 and at most 10 points which suggest how to reduce carbon footprint of this company
-    give me sector -specific recommendations and answer as if you are talking to the owner of the company in first person
-    each item in recommendations array must be without any serial number and should be around 3-4 lines
-    Input json: {
-    "electricity_kwh": ${electricity},
-    "petrol_litre": ${petrol},
-    "diesel_litre": ${diesel},
-    "carbon_emission_per_product" : ${carbonEmission} ,
-    "global_average_per_product" : ${standard}
-    }`
+  input2 = `{
+    "request": {
+      "electricity_kwh": ${electricity},
+      "petrol_litre": ${petrol},
+      "diesel_litre": ${diesel},
+      "carbon_emission_per_product": ${carbonEmission},
+      "global_average_per_product": ${standard},
+      "domain_of_company": "${domain_of_company}"
+    },
+    "response": {
+      "overview": "As an environmental specialist analyzing the carbon footprint of your ${domain_of_company} company, here is a comprehensive report and actionable recommendations.",
+      "analysis": "Based on the provided data, your current carbon footprint is assessed, and areas for improvement are identified.",
+      "performance": "The company's current environmental performance is evaluated, considering electricity consumption, petrol and diesel usage, and product-related carbon emissions.",
+      "recommendations": [
+        "Implement energy-efficient technologies in your facilities to reduce electricity consumption.",
+        "Transition your vehicle fleet to electric or hybrid options to decrease reliance on petrol and diesel.",
+        "Optimize production processes to minimize carbon emissions per product.",
+        "Explore renewable energy sources for your electricity needs to further reduce your carbon footprint.",
+        "Enhance supply chain sustainability by collaborating with eco-friendly suppliers.",
+        "Invest in employee awareness and training programs to encourage sustainable practices.",
+        "Consider implementing a carbon offset program to compensate for unavoidable emissions.",
+        "Explore innovative packaging solutions to reduce waste and emissions in product delivery.",
+        "Collaborate with industry peers to share best practices and collectively reduce carbon footprints.",
+        "Regularly monitor and report environmental performance metrics for transparency and improvement."
+      ],
+      "improvement": "By diligently following these recommendations, your company is expected to reduce its carbon footprint significantly, resulting in a more sustainable and environmentally responsible operation."
+    }
+  }
+  `
   //generating reponse
   res.render("loader/loadingScreen", { businessid });
 })
@@ -82,6 +98,7 @@ router.get("/newPage/:businessid",isLoggedIn,async(req, res)=>{
   console.log(Arr);
   const len=Arr.length;
   response = JSON.parse(await main(input2));
+  console.log(response)
   
   res.render('AiChatbot/recommendations', { recommendations: response.recommendations, analysis: response.analysis, performance: response.performance, result, overview:response.overview,Arr,len,average});
 })

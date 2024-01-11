@@ -35,10 +35,10 @@
       <div class="title">Comparison</div>
       <div class="title-content-space"></div>
       <div class="content">
-        <img width="256px" height="256px"
+        <img width="256px" height="256px" id="sbti"
           src="https://github.com/Om-dharra/CarbonLens/blob/main/Screenshot%202024-01-10%20202630.png?raw=true" alt="" />
         <div style="width: 124px"></div>
-        <span> <%= overview %>.<br> Your result: <%=result%>. </span>
+        <span> <%= overview %>.<br> Your result: <%=result/1000%> tonnes. </span>
       </div>
     </div>
     <div class="box box-blue">
@@ -71,16 +71,17 @@
   for(let i=1;i<=v2;i++){
     if(i==v2){
       allLabels.push("Ideal");
+      continue;
     }
     allLabels.push("Other"+i);
   }
   let inputData = [];
   if(v2>1){
     inputData=v1.split(",");
-    inputData.push(avg/10000000);
+    inputData.push(avg/100000);
   }else{
     inputData.push(v1);
-    inputData.push(avg/10000000);
+    inputData.push(avg/100000);
   }
   console.log(inputData);
   console.log(v1);

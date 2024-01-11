@@ -41,6 +41,9 @@ router.get("/dashboard",isLoggedIn,async(req,res)=>{
     }
 
     const toReadableDate = (date) => {
+        if (!date) {
+            return "Never";
+        }
         let month = date.getMonth();
         let year = date.getFullYear();
         let day = date.getDate();
